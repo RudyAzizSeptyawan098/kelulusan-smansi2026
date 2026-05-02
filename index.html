@@ -64,11 +64,6 @@ button:hover {
     background: #ffebee;
     color: #c62828;
 }
-
-.footer {
-    margin-top: 15px;
-    font-size: 12px;
-}
 </style>
 </head>
 
@@ -77,27 +72,22 @@ button:hover {
 <div class="container">
     <h1>PENGUMUMAN KELULUSAN</h1>
     <h2>SMA Negeri 1 Singorojo</h2>
-    <p>Masukkan NISN dan Nama Lengkap</p>
 
     <input type="text" id="nisn" placeholder="Masukkan NISN">
 
-    <!-- AUTO KAPITAL -->
     <input type="text" id="nama" placeholder="Masukkan Nama Lengkap"
            oninput="this.value = this.value.toUpperCase()">
 
     <button onclick="cekKelulusan()">Cek Kelulusan</button>
 
     <div id="hasil" class="result"></div>
-
-    <div class="footer">© 2026 SMA Negeri 1 Singorojo</div>
 </div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxgE2Wk2Cj-wmo8K0joHx18HGkkYFTI4Cw-JN0EMamBdl1w5cSpkpEzLBYUIZxx3TzB/exec";
 
-/* NORMALISASI NAMA (ANTI ERROR) */
 function normalize(text) {
-    return text.toLowerCase().replace(/\s+/g, " ").trim();
+    return text.toLowerCase().replace(/\\s+/g, " ").trim();
 }
 
 async function cekKelulusan() {
@@ -112,9 +102,8 @@ async function cekKelulusan() {
         return;
     }
 
-    hasil.className = "result";
-    hasil.innerHTML = "<p>Memproses data...</p>";
     hasil.style.display = "block";
+    hasil.innerHTML = "<p>Memproses...</p>";
 
     try {
         const response = await fetch(API_URL);
@@ -128,7 +117,13 @@ async function cekKelulusan() {
         if (siswa) {
             if (siswa.status === "LULUS") {
                 hasil.className = "result lulus";
-                hasil.innerHTML = "<h2>SELAMAT! ANDA LULUS</h2>";
+                hasil.innerHTML = `
+                    <h2>SELAMAT! ANDA LULUS</h2>
+                    <br>
+                    <a href="${siswa.link_pdf}" target="_blank">
+                        <button>Download Surat Kelulusan</button>
+                    </a>
+                `;
             } else {
                 hasil.className = "result tidak";
                 hasil.innerHTML = "<h2>MOHON MAAF, ANDA TIDAK LULUS</h2>";
@@ -139,9 +134,8 @@ async function cekKelulusan() {
         }
 
     } catch (error) {
-        console.error(error);
         hasil.className = "result tidak";
-        hasil.innerHTML = "<p>Terjadi kesalahan koneksi</p>";
+        hasil.innerHTML = "<p>Error mengambil data</p>";
     }
 }
 </script>
