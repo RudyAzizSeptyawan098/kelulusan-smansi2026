@@ -117,7 +117,9 @@ async function cekKelulusan() {
         const data = await response.json();
 
         const siswa = data.find(
-            s => s.nisn == nisn && s.nama == nama
+            s =>   
+                s.nisn.toString().trim() == nisn &&
+                s.nama.toString().toUpperCase().trim() == nama
         );
 
         if (siswa) {
