@@ -81,8 +81,8 @@ button:hover {
 
     <input type="text" id="nisn" placeholder="Masukkan NISN">
 
-    <!-- 🔥 AUTO KAPITAL -->
-    <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" 
+    <!-- AUTO KAPITAL -->
+    <input type="text" id="nama" placeholder="Masukkan Nama Lengkap"
            oninput="this.value = this.value.toUpperCase()">
 
     <button onclick="cekKelulusan()">Cek Kelulusan</button>
@@ -95,15 +95,15 @@ button:hover {
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxgE2Wk2Cj-wmo8K0joHx18HGkkYFTI4Cw-JN0EMamBdl1w5cSpkpEzLBYUIZxx3TzB/exec";
 
-/* 🔥 NORMALISASI (ANTI ERROR SPASI & KAPITAL) */
+/* NORMALISASI NAMA (ANTI ERROR) */
 function normalize(text) {
     return text.toLowerCase().replace(/\s+/g, " ").trim();
 }
 
 async function cekKelulusan() {
-    let nisn = document.getElementById("nisn").value.trim();
-    let nama = document.getElementById("nama").value.trim();
-    let hasil = document.getElementById("hasil");
+    const nisn = document.getElementById("nisn").value.trim();
+    const nama = document.getElementById("nama").value.trim();
+    const hasil = document.getElementById("hasil");
 
     if (!nisn || !nama) {
         hasil.className = "result tidak";
@@ -128,28 +128,20 @@ async function cekKelulusan() {
         if (siswa) {
             if (siswa.status === "LULUS") {
                 hasil.className = "result lulus";
-                hasil.innerHTML = `
-                    <h2>SELAMAT!</h2>
-                    <p>Anda dinyatakan <b>LULUS</b></p>
-                `;
+                hasil.innerHTML = "<h2>SELAMAT! ANDA LULUS</h2>";
             } else {
                 hasil.className = "result tidak";
-                hasil.innerHTML = `
-                    <h2>MOHON MAAF</h2>
-                    <p>Anda dinyatakan <b>TIDAK LULUS</b></p>
-                `;
+                hasil.innerHTML = "<h2>MOHON MAAF, ANDA TIDAK LULUS</h2>";
             }
         } else {
             hasil.className = "result tidak";
-            hasil.innerHTML = `
-                <h3>Data tidak ditemukan</h3>
-                <p>Cek kembali NISN dan Nama</p>
-            `;
+            hasil.innerHTML = "<p>Data tidak ditemukan</p>";
         }
 
     } catch (error) {
+        console.error(error);
         hasil.className = "result tidak";
-        hasil.innerHTML = "<p>Gagal mengambil data</p>";
+        hasil.innerHTML = "<p>Terjadi kesalahan koneksi</p>";
     }
 }
 </script>
