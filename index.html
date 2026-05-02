@@ -119,7 +119,8 @@ async function cekKelulusan() {
         const siswa = data.find(
             s =>   
                 s.nisn.toString().trim() == nisn &&
-                s.nama.toString().toUpperCase().trim() == nama
+                s.nama.toString().toLowerCase().trim() == nama.toLowerCase().trim()
+);
         );
 
         if (siswa) {
