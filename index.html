@@ -80,7 +80,10 @@ button:hover {
     <p>Masukkan NISN dan Nama Lengkap</p>
 
     <input type="text" id="nisn" placeholder="Masukkan NISN">
-    <input type="text" id="nama" placeholder="Masukkan Nama Lengkap">
+
+    <!-- 🔥 AUTO KAPITAL -->
+    <input type="text" id="nama" placeholder="Masukkan Nama Lengkap" 
+           oninput="this.value = this.value.toUpperCase()">
 
     <button onclick="cekKelulusan()">Cek Kelulusan</button>
 
@@ -90,15 +93,16 @@ button:hover {
 </div>
 
 <script>
-/* =========================
-   🔴 GANTI LINK INI SAJA
-========================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbxgE2Wk2Cj-wmo8K0joHx18HGkkYFTI4Cw-JN0EMamBdl1w5cSpkpEzLBYUIZxx3TzB/exec";
-/* ========================= */
+
+/* 🔥 NORMALISASI (ANTI ERROR SPASI & KAPITAL) */
+function normalize(text) {
+    return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
 
 async function cekKelulusan() {
     let nisn = document.getElementById("nisn").value.trim();
-    let nama = document.getElementById("nama").value.trim().toUpperCase();
+    let nama = document.getElementById("nama").value.trim();
     let hasil = document.getElementById("hasil");
 
     if (!nisn || !nama) {
@@ -116,11 +120,9 @@ async function cekKelulusan() {
         const response = await fetch(API_URL);
         const data = await response.json();
 
-        const siswa = data.find(
-            s =>   
-                s.nisn.toString().trim() == nisn &&
-                s.nama.toString().toLowerCase().trim() == nama.toLowerCase().trim()
-);
+        const siswa = data.find(s => 
+            s.nisn.toString().trim() === nisn &&
+            normalize(s.nama) === normalize(nama)
         );
 
         if (siswa) {
